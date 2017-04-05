@@ -12,11 +12,13 @@ public class Blog {
   private String title;
   private String info;
   private int id;
+  private int comment_counter;
 
   public Blog(String author, String title, String info) {
     this.author = author;
     this.title = title;
     this.info = info;
+    this.comment_counter = 0;
   }
 
   public String getAuthor() {
@@ -33,6 +35,10 @@ public class Blog {
 
   public int getId() {
     return id;
+  }
+
+  public int getCommentCounter() {
+    return comment_counter;
   }
 
   public void joinTags(int tagId) {
@@ -54,11 +60,12 @@ public class Blog {
 
   public void save() {
     try (Connection con = DB.sql2o.open()) {
-      String sql = "INSERT INTO blogs (author, title, info) VALUES (:author, :title, :info);";
+      String sql = "INSERT INTO blogs (author, title, info, comment_counter) VALUES (:author, :title, :info, :comment_counter);";
       this.id = (int) con.createQuery(sql, true)
         .addParameter("author", author)
         .addParameter("title", title)
         .addParameter("info", info)
+        .addParameter("comment_counter", comment_counter)
         .executeUpdate()
         .getKey();
     }
@@ -71,6 +78,16 @@ public class Blog {
         .executeAndFetch(Blog.class);
     }
   }
+
+  public static List<Blog> most() {
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "SELECT * FROM blogs ORDER BY comment_counter;";
+      return con.createQuery(sql)
+        .executeAndFetch(Blog.class);
+    }
+  }
+
+
 
   public static Blog find(int id) {
     try (Connection con = DB.sql2o.open()) {
@@ -110,13 +127,22 @@ public class Blog {
    }
  }
 
- public static List<Comment> getComments(int id) {
-  try (Connection con = DB.sql2o.open()) {
-    String sql = "SELECT * FROM comments WHERE blog_id = :id;";
-    return con.createQuery(sql)
+  public static List<Comment> getComments(int id) {
+   try (Connection con = DB.sql2o.open()) {
+     String sql = "SELECT * FROM comments WHERE blog_id = :id;";
+     return con.createQuery(sql)
       .addParameter("id", id)
       .executeAndFetch(Comment.class);
+    }
   }
-}
+
+  public static Integer getTotalComments(int id) {
+    try (Connection con = DB.sql2o.open()) {
+      String sql = "SELECT COUNT (*) FROM comments WHERE blog_id = :id;";
+      return con.createQuery(sql)
+       .addParameter("id", id)
+       .executeScalar(Integer.class);
+     }
+  }
 
 }

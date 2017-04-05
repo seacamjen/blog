@@ -49,13 +49,19 @@ public class Comment {
 
   public void save() {
     try (Connection con = DB.sql2o.open()) {
-      String sql = "INSERT INTO comments (name, comment, blog_id) VALUES (:name, :comment, :blog_id);";
-      this.id = (int) con.createQuery(sql, true)
+      String sqlsave = "INSERT INTO comments (name, comment, blog_id) VALUES (:name, :comment, :blog_id);";
+      this.id = (int) con.createQuery(sqlsave, true)
         .addParameter("name", name)
         .addParameter("comment", comment)
         .addParameter("blog_id", blog_id)
         .executeUpdate()
         .getKey();
+
+      String sqlupdate = "UPDATE blogs SET (comment_counter) = (comment_counter + 1) WHERE id = :blog_id;";
+      System.out.println(this.getBlogId());
+      con.createQuery(sqlupdate)
+        .addParameter("blog_id", this.getBlogId())
+        .executeUpdate();
     }
   }
 
