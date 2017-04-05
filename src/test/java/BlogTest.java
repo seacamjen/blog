@@ -98,13 +98,32 @@ public class BlogTest {
   }
 
   @Test
-  public void joinTags_customerCanAssociateTagstoBlog_true() {
+  public void getTags_bloggerCanAssociateTagstoBlog_true() {
     Blog newBlog = new Blog("Sally", "Great Blog", "blah blah blah");
     newBlog.save();
     Tag newTag = new Tag("Arnold");
     newTag.save();
-    newBlog.joinTags(newTag.getId());
-    assertEquals(newBlog.getId(), BlogsTags.all().get(0).getTagId());
-    assertEquals(newTag.getId(), BlogsTags.all().get(0).getBlogId());
+    BlogsTags test = new BlogsTags(newTag.getId() ,newBlog.getId());
+    test.save();
+    newBlog.getTags(newBlog.getId());
+    assertEquals(newBlog.getId(), BlogsTags.all().get(0).getBlogId());
+    assertEquals(newTag.getId(), BlogsTags.all().get(0).getTagId());
+  }
+
+  @Test
+  public void getComments_bloggerCanGetAllCommentsToABlogPost() {
+    Blog newBlog = new Blog("Sally", "Great Blog", "blah blah blah");
+    newBlog.save();
+    Blog otherBlog = new Blog("jim", "hello", "asdfasdf");
+    otherBlog.save();
+    Comment newComment1 = new Comment("Joe", "Great Comment", newBlog.getId());
+    newComment1.save();
+    Comment newComment2 = new Comment("Fred", "SimpleComment", otherBlog.getId());
+    newComment2.save();
+    assertEquals(newComment1.getBlogId(), newBlog.getComments(newBlog.getId()).get(0).getBlogId());
+    assertEquals(newComment2.getBlogId(), otherBlog.getComments(otherBlog.getId()).get(0).getBlogId());
+    // assertEquals(newComment1.getBlogId(), newBlog.getComments(newBlog.getId()));
+    // assertEquals(newBlog.getComments(newBlog.getId()), Comment.all().get(0).getBlogId());
+    // assertEquals(newBlog.getComments(newBlog.getId()), Comment.all().get(1).getBlogId());
   }
 }

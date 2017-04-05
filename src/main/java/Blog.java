@@ -101,13 +101,22 @@ public class Blog {
     }
   }
 
-  public static List<Blog> getTags(int tagId) {
+  public static List<Blog> getTags(int id) {
    try (Connection con = DB.sql2o.open()) {
-     String sql = "SELECT tags.name FROM blogs INNER JOIN blogs_tags WHERE id = blog_id INNER JOIN tags WHERE tag_id = id;";
+     String sql = "SELECT tags.name FROM blogs INNER JOIN blogs_tags ON :id = blogs_tags.blog_id INNER JOIN tags ON blogs_tags.tag_id = tags.id;";
      return con.createQuery(sql)
-       .addParameter("tagId", tagId)
+       .addParameter("id", id)
        .executeAndFetch(Blog.class);
    }
  }
+
+ public static List<Comment> getComments(int id) {
+  try (Connection con = DB.sql2o.open()) {
+    String sql = "SELECT * FROM comments WHERE blog_id = :id;";
+    return con.createQuery(sql)
+      .addParameter("id", id)
+      .executeAndFetch(Comment.class);
+  }
+}
 
 }
