@@ -37,4 +37,63 @@ public class BlogTest {
     Blog newBlog = new Blog("Sally", "Great Blog", "blah blah blah");
     assertEquals("blah blah blah", newBlog.getInfo());
   }
+
+  @Test
+  public void equals_comparesBlogBasedOnAuthorTitleAndInfo() {
+    Blog newBlogOne = new Blog("Sally", "Great Blog", "blah blah blah");
+    Blog newBlogTwo = new Blog("Sally", "Great Blog", "blah blah blah");
+    assertTrue(newBlogOne.equals(newBlogTwo));
+  }
+
+  @Test
+  public void save_savesBlog() {
+    Blog newBlog = new Blog("Sally", "Great Blog", "blah blah blah");
+    newBlog.save();
+    assertTrue(Blog.all().get(0).equals(newBlog));
+  }
+
+  @Test
+  public void all_returnsAllBlogs() {
+    Blog newBlogOne = new Blog("Sally", "Great Blog", "blah blah blah");
+    newBlogOne.save();
+    Blog newBlogTwo = new Blog("Sally", "Great Blog", "blah blah blah");
+    newBlogTwo.save();
+    assertTrue(Blog.all().get(0).equals(newBlogOne));
+    assertTrue(Blog.all().get(1).equals(newBlogTwo));
+  }
+
+  @Test
+  public void getId_returnsIdForBlog_true() {
+    Blog newBlog = new Blog("Sally", "Great Blog", "blah blah blah");
+    newBlog.save();
+    assertTrue(newBlog.getId() > 0);
+  }
+
+  @Test
+  public void find_returnsBlogWithAGivenId() {
+    Blog newBlogOne = new Blog("Sally", "Great Blog", "blah blah blah");
+    newBlogOne.save();
+    Blog newBlogTwo = new Blog("Sally", "Great Blog", "blah blah blah");
+    newBlogTwo.save();
+    assertEquals(newBlogTwo, Blog.find(newBlogTwo.getId()));
+  }
+
+  @Test
+  public void update_updatesBlog_true() {
+    Blog newBlog = new Blog("Sally", "Great Blog", "blah blah blah");
+    newBlog.save();
+    newBlog.update("Sally Joe", "Greatest Blog", "blah blah blee");
+    assertEquals("Sally Joe", Blog.find(newBlog.getId()).getAuthor());
+    assertEquals("Greatest Blog", Blog.find(newBlog.getId()).getTitle());
+    assertEquals("blah blah blee", Blog.find(newBlog.getId()).getInfo());
+  }
+
+  @Test
+  public void delete_deletesBlog_true() {
+    Blog newBlog = new Blog("Sally", "Great Blog", "blah blah blah");
+    newBlog.save();
+    int newBlogId = newBlog.getId();
+    newBlog.delete();
+    assertEquals(null, Blog.find(newBlogId));
+  }
 }

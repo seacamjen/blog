@@ -9,7 +9,7 @@ import java.sql.Timestamp;
 
 public class Tag {
 
-  public Tag() {
+  public Tag(String name) {
 
   }
 

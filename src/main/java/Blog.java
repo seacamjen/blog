@@ -11,6 +11,7 @@ public class Blog {
   private String author;
   private String title;
   private String info;
+  private int id;
 
   public Blog(String author, String title, String info) {
     this.author = author;
@@ -28,6 +29,71 @@ public class Blog {
 
   public String getInfo() {
     return info;
+  }
+
+  public int getId() {
+    return id;
+  }
+
+  @Override
+  public boolean equals(Object otherBlog) {
+    if (!(otherBlog instanceof Blog)) {
+      return false;
+    } else {
+      Blog newBlog = (Blog) otherBlog;
+      return this.getAuthor().equals(newBlog.getAuthor()) &&
+             this.getTitle().equals(newBlog.getTitle()) &&
+             this.getInfo().equals(newBlog.getInfo());
+    }
+  }
+
+  public void save() {
+    try (Connection con = DB.sql2o.open()) {
+      String sql = "INSERT INTO blogs (author, title, info) VALUES (:author, :title, :info);";
+      this.id = (int) con.createQuery(sql, true)
+        .addParameter("author", author)
+        .addParameter("title", title)
+        .addParameter("info", info)
+        .executeUpdate()
+        .getKey();
+    }
+  }
+
+  public static List<Blog> all() {
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "SELECT * FROM blogs;";
+      return con.createQuery(sql)
+        .executeAndFetch(Blog.class);
+    }
+  }
+
+  public static Blog find(int id) {
+    try (Connection con = DB.sql2o.open()) {
+      String sql = "SELECT * FROM blogs WHERE id = :id;";
+      return con.createQuery(sql)
+        .addParameter("id", id)
+        .executeAndFetchFirst(Blog.class);
+    }
+  }
+
+  public void update(String author, String title, String info) {
+    try (Connection con = DB.sql2o.open()) {
+      String sql = "UPDATE blogs SET (author, title, info) = (:author, :title, :info);";
+      con.createQuery(sql)
+        .addParameter("author", author)
+        .addParameter("title", title)
+        .addParameter("info", info)
+        .executeUpdate();
+    }
+  }
+
+  public void delete() {
+    try (Connection con = DB.sql2o.open()) {
+      String sql = "DELETE FROM blogs WHERE id = :id;";
+      con.createQuery(sql)
+        .addParameter("id", id)
+        .executeUpdate();
+    }
   }
 
 }

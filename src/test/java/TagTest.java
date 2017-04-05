@@ -14,4 +14,9 @@ public class TagTest {
   @Rule
   public DatabaseRule databse = new DatabaseRule();
 
+  @Test
+  public void tag_instantiatesCorrectly_true() {
+    Tag newTag = new Tag("Travel");
+    assertTrue(newTag instanceof Tag);
+  }
 }
