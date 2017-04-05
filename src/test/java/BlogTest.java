@@ -96,4 +96,9 @@ public class BlogTest {
     newBlog.delete();
     assertEquals(null, Blog.find(newBlogId));
   }
+
+  // @Test
+  // public void getTags_returnsTagsBasedOnId_true() {
+  //
+  // }
 }
