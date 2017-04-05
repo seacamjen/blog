@@ -97,8 +97,14 @@ public class BlogTest {
     assertEquals(null, Blog.find(newBlogId));
   }
 
-  // @Test
-  // public void getTags_returnsTagsBasedOnId_true() {
-  //
-  // }
+  @Test
+  public void joinTags_customerCanAssociateTagstoBlog_true() {
+    Blog newBlog = new Blog("Sally", "Great Blog", "blah blah blah");
+    newBlog.save();
+    Tag newTag = new Tag("Arnold");
+    newTag.save();
+    newBlog.joinTags(newTag.getId());
+    assertEquals(newBlog.getId(), BlogsTags.all().get(0).getTagId());
+    assertEquals(newTag.getId(), BlogsTags.all().get(0).getBlogId());
+  }
 }

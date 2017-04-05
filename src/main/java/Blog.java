@@ -35,6 +35,11 @@ public class Blog {
     return id;
   }
 
+  public void joinTags(int tagId) {
+    BlogsTags newBlogsTags = new BlogsTags(this.id, tagId);
+    newBlogsTags.save();
+  }
+
   @Override
   public boolean equals(Object otherBlog) {
     if (!(otherBlog instanceof Blog)) {
@@ -95,5 +100,14 @@ public class Blog {
         .executeUpdate();
     }
   }
+
+  public static List<Blog> getTags(int tagId) {
+   try (Connection con = DB.sql2o.open()) {
+     String sql = "SELECT tags.name FROM blogs INNER JOIN blogs_tags WHERE id = blog_id INNER JOIN tags WHERE tag_id = id;";
+     return con.createQuery(sql)
+       .addParameter("tagId", tagId)
+       .executeAndFetch(Blog.class);
+   }
+ }
 
 }
