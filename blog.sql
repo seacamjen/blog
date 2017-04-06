@@ -207,7 +207,7 @@ COPY blogs (id, author, title, info, comment_counter) FROM stdin;
 -- Name: blogs_id_seq; Type: SEQUENCE SET; Schema: public; Owner: Guest
 --
 
-SELECT pg_catalog.setval('blogs_id_seq', 2, true);
+SELECT pg_catalog.setval('blogs_id_seq', 25, true);
 
 
 --
@@ -222,7 +222,7 @@ COPY blogs_tags (id, tag_id, blog_id) FROM stdin;
 -- Name: blogs_tags_id_seq; Type: SEQUENCE SET; Schema: public; Owner: Guest
 --
 
-SELECT pg_catalog.setval('blogs_tags_id_seq', 1, true);
+SELECT pg_catalog.setval('blogs_tags_id_seq', 21, true);
 
 
 --
@@ -237,7 +237,7 @@ COPY comments (id, name, comment, blog_id) FROM stdin;
 -- Name: comments_id_seq; Type: SEQUENCE SET; Schema: public; Owner: Guest
 --
 
-SELECT pg_catalog.setval('comments_id_seq', 1, false);
+SELECT pg_catalog.setval('comments_id_seq', 38, true);
 
 
 --
@@ -252,7 +252,7 @@ COPY tags (id, name) FROM stdin;
 -- Name: tags_id_seq; Type: SEQUENCE SET; Schema: public; Owner: Guest
 --
 
-SELECT pg_catalog.setval('tags_id_seq', 1, true);
+SELECT pg_catalog.setval('tags_id_seq', 13, true);
 
 
 --
