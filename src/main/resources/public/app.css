@@ -1,0 +1,12 @@
+body {
+
+}
+
+.jumbotron {
+  text-align: center;
+  background-color: blue;
+}
+
+.commentSection {
+  display: none;
+}

@@ -7,7 +7,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.sql.Timestamp;
 
-public class Tag {
+public class Tag implements DatabaseManagement {
   private String name;
   private int id;
 
@@ -23,6 +23,7 @@ public class Tag {
     return id;
   }
 
+  @Override
   public void save() {
     try(Connection con = DB.sql2o.open()) {
       String sql = "INSERT INTO tags (name) VALUES (:name);";
@@ -69,12 +70,18 @@ public class Tag {
     }
   }
 
+  @Override
   public void delete() {
     try (Connection con = DB.sql2o.open()) {
       String sql = "DELETE FROM tags WHERE id = :id;";
       con.createQuery(sql)
         .addParameter("id", id)
         .executeUpdate();
+
+      String sql1 = "DELETE FROM blogs_tags USING tags WHERE blogs_tags.tag_id = :id;";
+      con.createQuery(sql1)
+      .addParameter("id", id)
+      .executeUpdate();
     }
   }
 }

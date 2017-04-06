@@ -7,7 +7,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.sql.Timestamp;
 
-public class Blog {
+public class Blog implements DatabaseManagement {
   private String author;
   private String title;
   private String info;
@@ -63,6 +63,7 @@ public class Blog {
     }
   }
 
+  @Override
   public void save() {
     try (Connection con = DB.sql2o.open()) {
       String sql = "INSERT INTO blogs (author, title, info, comment_counter) VALUES (:author, :title, :info, :comment_counter);";
@@ -86,13 +87,11 @@ public class Blog {
 
   public static List<Blog> most() {
     try(Connection con = DB.sql2o.open()) {
-      String sql = "SELECT * FROM blogs ORDER BY comment_counter;";
+      String sql = "SELECT * FROM blogs ORDER BY comment_counter DESC;";
       return con.createQuery(sql)
         .executeAndFetch(Blog.class);
     }
   }
-
-
 
   public static Blog find(int id) {
     try (Connection con = DB.sql2o.open()) {
@@ -102,6 +101,7 @@ public class Blog {
         .executeAndFetchFirst(Blog.class);
     }
   }
+
 
   public void update(String author, String title, String info) {
     try (Connection con = DB.sql2o.open()) {
@@ -114,10 +114,16 @@ public class Blog {
     }
   }
 
+  @Override
   public void delete() {
     try (Connection con = DB.sql2o.open()) {
       String sql = "DELETE FROM blogs WHERE id = :id;";
       con.createQuery(sql)
+        .addParameter("id", id)
+        .executeUpdate();
+
+        String sql1 = "DELETE FROM blogs_tags USING blogs WHERE blogs_tags.blog_id = :id;";
+        con.createQuery(sql1)
         .addParameter("id", id)
         .executeUpdate();
     }

@@ -7,7 +7,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.sql.Timestamp;
 
-public class Comment {
+public class Comment implements DatabaseManagement{
   private String name;
   private String comment;
   private int blog_id;
@@ -47,6 +47,7 @@ public class Comment {
     }
   }
 
+  @Override
   public void save() {
     try (Connection con = DB.sql2o.open()) {
       String sqlsave = "INSERT INTO comments (name, comment, blog_id) VALUES (:name, :comment, :blog_id);";
@@ -93,6 +94,7 @@ public class Comment {
     }
   }
 
+  @Override
   public void delete() {
     try (Connection con = DB.sql2o.open()) {
       String sql = "DELETE FROM comments WHERE id = :id;";

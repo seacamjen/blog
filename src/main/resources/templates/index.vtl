@@ -1,3 +1,50 @@
 <!--index.vtl-->
-
+#foreach ($blog in $blogs)
+  <div class="row">
+    <div class="col-md-offset-2 col-md-8">
+      <div class="panel panel-success">
+        <div class="panel-heading">
+          <h3>$blog.getTitle()</h3>
+        </div>
+        <!-- <ul>
+        #foreach ($tag in $blog.getTags($blog.getId()))
+            <li>$tag.getName()</li>
+        #end
+      </ul> -->
+      </div>
+      <div class="panel-body">
+        <p>
+          $blog.getInfo()
+        </p>
+      </div>
+      <div class="panel-footer">
+        <strong>Posted by: $blog.getAuthor()</strong>
+      </div>
+      <div class="row form-group">
+        <form id="commentForm" action="/" method="post">
+          <input id="blogId" name="blogId" type="hidden" value="$blog.getId()">
+          <label for="name">Name:</label>
+          <input id="name" type="text" name="name" class="form-control" required>
+          <label for="comment">Comment:</label>
+          <textarea name="comment" rows="3" cols="20" class="form-control"></textarea>
+          <button type="Submit" name="button">Add Comment</button>
+        </form>
+      </div>
+      <div class="showComments" id="showComments">
+        <p>
+          <strong>click here to see comments</strong>
+        </p>
+      </div>
+      <div class="row commentSection" id="commentSection">
+        #foreach ($comment in $blog.getComments($blog.getId()))
+          <div class="panel panel-default">
+            <div class="panel-body">$comment.getName(): $comment.getComment()</div>
+          </div>
+        #end
+      </div>
+    </div>
+  </div>
+  <br>
+  <hr>
+#end
 <!--index.vtl-->
