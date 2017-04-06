@@ -37,8 +37,13 @@ public class Blog {
     return id;
   }
 
-  public int getCommentCounter() {
-    return comment_counter;
+  public Integer getCommentCounter() {
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "Select comment_counter From blogs WHERE id = :id;";
+      return con.createQuery(sql)
+        .addParameter("id", id)
+        .executeScalar(Integer.class);
+    }
   }
 
   public void joinTags(int tagId) {
