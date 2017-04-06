@@ -47,7 +47,7 @@ public class Blog implements DatabaseManagement {
   }
 
   public void joinTags(int tagId) {
-    BlogsTags newBlogsTags = new BlogsTags(this.id, tagId);
+    BlogsTags newBlogsTags = new BlogsTags(tagId, this.id);
     newBlogsTags.save();
   }
 
@@ -129,14 +129,16 @@ public class Blog implements DatabaseManagement {
     }
   }
 
-  public static List<Blog> getTags(int id) {
+  public static List<Tag> getTags(int id) {
    try (Connection con = DB.sql2o.open()) {
-     String sql = "SELECT tags.name FROM blogs INNER JOIN blogs_tags ON :id = blogs_tags.blog_id INNER JOIN tags ON blogs_tags.tag_id = tags.id;";
+     String sql = "SELECT tags.name FROM tags INNER JOIN blogs_tags ON blogs_tags.tag_id = tags.id INNER JOIN blogs ON blogs.id = blogs_tags.blog_id WHERE blogs.id = :id;";
      return con.createQuery(sql)
        .addParameter("id", id)
-       .executeAndFetch(Blog.class);
+       .executeAndFetch(Tag.class);
    }
  }
+
+
 
   public static List<Comment> getComments(int id) {
    try (Connection con = DB.sql2o.open()) {

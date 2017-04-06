@@ -1,5 +1,7 @@
 import java.util.Map;
 import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 import spark.ModelAndView;
 import spark.template.velocity.VelocityTemplateEngine;
 import static spark.Spark.*;
@@ -35,13 +37,20 @@ public class App {
       String blogInfo = request.queryParams("blogInfo");
       Blog newBlog = new Blog(blogAuthor, blogTitle, blogInfo);
       newBlog.save();
+      String [] tags = request.queryParamsValues("tagsList");
+      System.out.println(tags);
+      for (String tag : tags) {
+        newBlog.joinTags(Integer.parseInt(tag));
+      }
+
+      // model.put("tags", Tag.all());
       response.redirect("/");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
 
     get("/blogs/new", (request, response) -> {
       Map<String, Object> model = new HashMap<String, Object>();
-      model.put("tags", Tag.all());
+      model.put("allTags", Tag.all());
       model.put("template", "templates/blogger.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());

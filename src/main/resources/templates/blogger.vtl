@@ -9,6 +9,9 @@
         <input type="text" name="blogTitle" class="form-control" required>
         <label for="blogInfo">Info</label>
         <input type="text" name="blogInfo" class="form-control" required>
+        #foreach ($tag in $allTags)
+          <input type="checkbox" name="tagsList" value="$tag.getId()">$tag.getName()<br>
+        #end
         <button type="submit" class='btn btn-default'>Add Blog</button>
       </form>
     </div>

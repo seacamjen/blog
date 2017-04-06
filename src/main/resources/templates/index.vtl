@@ -6,11 +6,12 @@
         <div class="panel-heading">
           <h3>$blog.getTitle()</h3>
         </div>
-        <!-- <ul>
+        <ul>
+
         #foreach ($tag in $blog.getTags($blog.getId()))
             <li>$tag.getName()</li>
         #end
-      </ul> -->
+      </ul>
       </div>
       <div class="panel-body">
         <p>
@@ -30,15 +31,14 @@
           <button type="Submit" name="button">Add Comment</button>
         </form>
       </div>
-      <div class="showComments" id="showComments">
-        <p>
-          <strong>click here to see comments</strong>
-        </p>
-      </div>
-      <div class="row commentSection" id="commentSection">
+      <div class="row">
+        Comments:<span class="badge">$blog.getTotalComments($blog.getId())</span>
         #foreach ($comment in $blog.getComments($blog.getId()))
           <div class="panel panel-default">
-            <div class="panel-body">$comment.getName(): $comment.getComment()</div>
+            <div class="panel-heading">
+              $comment.getName()
+            </div>
+            <div class="panel-body">$comment.getComment()</div>
           </div>
         #end
       </div>
